@@ -40,7 +40,7 @@ const createCategory = async (data) => {
 const updateCategory = async (data, id) => {
     try {
         const category = await Category.findByPk(id);
-        const update = await category.update(data);
+        const update   = await category.update(data);
         return {
             message: 'success',
             data: update
@@ -53,7 +53,7 @@ const updateCategory = async (data, id) => {
 const deleteCategory = async (id) => {
     try {
         const category = await Category.findByPk(id);
-        const destroy = await category.destroy();
+        await category.destroy();
         return {
             message: 'deleted'
         };

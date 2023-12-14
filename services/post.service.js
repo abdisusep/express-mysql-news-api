@@ -1,11 +1,75 @@
-
+const slug = require('slug')
+const model = require('../models');
+const Post = model.Post;
 
 const getPosts = async () => {
     try {
-        const categories = await Category.findAll();
+        const posts = await Post.findAll();
         return {
             message: 'success',
-            data: categories
+            data: posts
+        };
+    } catch (e) {
+        throw Error('Internal server error!');
+    }
+}
+
+const getPost = async (id) => {
+    try {
+        const post = await Post.findByPk(id);
+        return {
+            message: 'success',
+            data: post
+        };
+    } catch (e) {
+        throw Error('Internal server error!');
+    }
+}
+
+const createPost = async (data) => {
+    try {
+        const body = {
+            category_id: data.category_id,
+            slug: slug(data.title),
+            title: data.title,
+            content: data.content
+        }
+        const post = await Post.create(body);
+        return {
+            message: 'success',
+            data: post
+        };
+    } catch (e) {
+        throw Error('Internal server error!');
+    }
+}
+
+const updatePost = async (data, id) => {
+    try {
+        const body = {
+            category_id: data.category_id,
+            slug: slug(data.title),
+            title: data.title,
+            content: data.content
+        }
+        console.log(body)
+        const post   = await Post.findByPk(id);
+        const update = await post.update(body);
+        return {
+            message: 'success',
+            data: update
+        };
+    } catch (e) {
+        throw Error('Internal server error!');
+    }
+}
+
+const deletePost = async (id) => {
+    try {
+        const post = await Post.findByPk(id);
+        await post.destroy();
+        return {
+            message: 'deleted'
         };
     } catch (e) {
         throw Error('Internal server error!');
@@ -13,5 +77,5 @@ const getPosts = async () => {
 }
 
 module.exports = {
-    getPosts
+    getPosts, getPost, createPost, updatePost, deletePost
 }
