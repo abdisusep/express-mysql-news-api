@@ -1,4 +1,5 @@
-const Category = require('../models/category.model');
+const model = require('../models');
+const Category = model.Category;
 
 const getCategories = async () => {
     try {
@@ -54,7 +55,7 @@ const deleteCategory = async (id) => {
         const category = await Category.findByPk(id);
         const destroy = await category.destroy();
         return {
-            message: 'Deleted'
+            message: 'deleted'
         };
     } catch (e) {
         throw Error('Internal server error!');
