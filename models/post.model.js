@@ -2,6 +2,10 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../config/db.config');
 
 const Post = sequelize.define('posts', {
+  category_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
   slug: {
     type: DataTypes.STRING,
     allowNull: false,
