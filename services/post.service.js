@@ -32,7 +32,8 @@ const createPost = async (data) => {
             category_id: data.category_id,
             slug: slug(data.title),
             title: data.title,
-            content: data.content
+            content: data.content,
+            image: 'image.png'
         }
         const post = await Post.create(body);
         return {
@@ -50,7 +51,8 @@ const updatePost = async (data, id) => {
             category_id: data.category_id,
             slug: slug(data.title),
             title: data.title,
-            content: data.content
+            content: data.content,
+            image: 'image.png'
         }
         console.log(body)
         const post   = await Post.findByPk(id);
