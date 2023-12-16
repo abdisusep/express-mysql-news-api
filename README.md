@@ -1,4 +1,18 @@
 
+## Environment Variables
+
+To run this project, you will need to add the following environment variables to your .env file
+
+`DB_NAME=test`
+
+`DB_USER=root`
+
+`DB_PASS=`
+
+`DB_HOST=localhost`
+
+`PORT=3000`
+
 ## Run Locally
 
 Clone the project
@@ -24,4 +38,3 @@ Start the server
 ```bash
   npm start
 ```
-
