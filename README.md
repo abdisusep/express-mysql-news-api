@@ -1,9 +1,16 @@
 
 ## Environment Variables
 
-To run this project, you will need to add the following environment variables to your .env file
+To run this project, you will need to create new database and add the following environment variables to your .env file
 
-`DB_NAME=test`
+Create database mysql
+
+```bash
+  CREATE DATABASE news_api;
+```
+.ENV File
+
+`DB_NAME=news_api`
 
 `DB_USER=root`
 
@@ -12,6 +19,7 @@ To run this project, you will need to add the following environment variables to
 `DB_HOST=localhost`
 
 `PORT=3000`
+
 
 ## Run Locally
 
