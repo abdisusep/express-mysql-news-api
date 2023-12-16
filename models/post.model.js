@@ -3,7 +3,7 @@ const sequelize = require('../config/db.config');
 const Category = require('./category.model');
 
 const Post = sequelize.define('posts', {
-  category_id: {
+  categoryId: {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
@@ -24,9 +24,10 @@ const Post = sequelize.define('posts', {
     allowNull: false,
   }
 }, {
-  freezeTableName: true
+  freezeTableName: true,
+  timestamps: true
 });
 
-Post.belongsTo(Category, { foreignKey: 'category_id', targetKey: 'id', as: 'category' });
+Post.belongsTo(Category, { foreignKey: 'categoryId', targetKey: 'id', as: 'category' });
 
 module.exports = Post;
