@@ -1,6 +1,6 @@
 const sequelize = require('../config/db.config');
 
-sequelize.sync()
+sequelize.sync({ force: false })
 .then(() => {
   console.log('Database synced');
 })

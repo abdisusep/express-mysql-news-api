@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/db.config');
+const Category = require('./category.model');
 
 const Post = sequelize.define('posts', {
   category_id: {
@@ -25,5 +26,7 @@ const Post = sequelize.define('posts', {
 }, {
   freezeTableName: true
 });
+
+Post.belongsTo(Category, { foreignKey: 'category_id', targetKey: 'id', as: 'category' });
 
 module.exports = Post;
