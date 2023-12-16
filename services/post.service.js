@@ -4,7 +4,9 @@ const Post = model.Post;
 
 const getPosts = async () => {
     try {
-        const posts = await Post.findAll();
+        const posts = await Post.findAll({
+            include: 'category'
+        });
         return {
             message: 'success',
             data: posts
