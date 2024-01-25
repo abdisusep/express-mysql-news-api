@@ -1,6 +1,5 @@
 require('dotenv').config();
 const slug = require('slug');
-const bcrypt = require('bcrypt');
 const fs = require('fs/promises');
 const path = require('path');
 
