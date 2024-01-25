@@ -14,18 +14,36 @@ const Post = sequelize.define('posts', {
   title: {
     type: DataTypes.STRING,
     allowNull: false,
+    validate: {
+      notEmpty: {
+        msg: 'Title is required',
+      },
+    },
   },
   content: {
     type: DataTypes.TEXT,
     allowNull: false,
+    validate: {
+      notEmpty: {
+        msg: 'Content is required',
+      },
+    },
   },
   image: {
     type: DataTypes.STRING,
     allowNull: false,
+    validate: {
+      notEmpty: {
+        msg: 'Image is required',
+      },
+    },
   }
 }, {
   freezeTableName: true,
-  timestamps: true
+  timestamps: true,
+  defaultScope: {
+    attributes: { exclude: ['categoryId'] },
+  },
 });
 
 Post.belongsTo(Category, { foreignKey: 'categoryId', targetKey: 'id', as: 'category' });

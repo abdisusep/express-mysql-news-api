@@ -1,52 +1,55 @@
 const service = require('../services/post.service');
+const { sendSuccessResponse, sendErrorResponse } = require('../utils/response');
 
 const getPosts = async (req, res) => {
     try {
-        const posts = await service.getPosts();
-        res.status(200).json(posts);
-    } catch (e) {
-        res.status(400).json({ error: e.message });
+        const result = await service.getPosts();
+        sendSuccessResponse(res, result);
+    } catch (err) {
+        sendErrorResponse(res, err, 400);
     }
 }
 
 const getPost = async (req, res) => {
     try {
-        const id   = req.params.id;
-        const post = await service.getPost(id);
-        res.status(200).json(post);
-    } catch (e) {
-        res.status(500).json({ error: e.message });
+        const id     = req.params.id;
+        const result = await service.getPost(id);
+        sendSuccessResponse(res, result);
+    } catch (err) {
+        sendErrorResponse(res, err);
     }
 }
 
 const createPost = async (req, res) => {
     try {
-        const data = req.body;
-        const post = await service.createPost(data);
-        res.status(201).json(post);
-    } catch (e) {
-        res.status(400).json({ error: e.message });
+        const data   = req.body;
+        const file   = req.file;
+        const result = await service.createPost(data, file);
+        sendSuccessResponse(res, result);
+    } catch (err) {
+        sendErrorResponse(res, err, 400);
     }
 }
 
 const updatePost = async (req, res) => {
     try {
-        const data = req.body;
-        const id   = req.params.id;
-        const post = await service.updatePost(data, id);
-        res.status(200).json(post);
-    } catch (e) {
-        res.status(400).json({ error: e.message });
+        const data   = req.body;
+        const id     = req.params.id;
+        const file   = req.file;
+        const result = await service.updatePost(data, file, id);
+        sendSuccessResponse(res, result);
+    } catch (err) {
+        sendErrorResponse(res, err, 400);
     }
 }
 
 const deletePost = async (req, res) => {
     try {
-        const id   = req.params.id;
-        const post = await service.deletePost(id);
-        res.status(200).json(post);
-    } catch (e) {
-        res.status(400).json({ error: e.message });
+        const id     = req.params.id;
+        const result = await service.deletePost(id);
+        sendSuccessResponse(res, result);
+    } catch (err) {
+        sendErrorResponse(res, err, 400);
     }
 }
 

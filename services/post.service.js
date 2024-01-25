@@ -1,82 +1,172 @@
-const slug = require('slug')
+require('dotenv').config();
+const slug = require('slug');
+const bcrypt = require('bcrypt');
+const fs = require('fs/promises');
+const path = require('path');
+
 const model = require('../models');
+const Category = model.Category;
 const Post = model.Post;
 
 const getPosts = async () => {
     try {
         const posts = await Post.findAll({
-            include: 'category'
+            include: 'category',
         });
+
+        if (posts.length === 0) {
+            return {
+                status: 'error',
+                code: 404,
+                message: 'Data tidak ditemukan',
+            }
+        }
+
         return {
-            message: 'success',
+            message: 'Data',
             data: posts
-        };
-    } catch (e) {
-        throw Error('Internal server error!');
+        }
+    } catch (err) {
+        throw new Error(err);
     }
 }
 
 const getPost = async (id) => {
     try {
+        const post = await Post.findByPk(id, {
+            include: 'category',
+        });
+
+        if (!post) {
+            return {
+                status: 'error',
+                code: 404,
+                message: 'Data tidak ditemukan',
+            }
+        }
+
+        return {
+            message: 'Detail',
+            data: post
+        }
+    } catch (err) {
+        throw new Error(err);
+    }
+}
+
+const createPost = async (data, file) => {
+    try {
+        const uploadFolder = 'uploads/';
+        let fileName = '';
+
+        if (file) {
+            const fileType = file.mimetype.split('/')[1];
+            fileName = `${Date.now()}.${fileType}`;
+            const filePath = `${uploadFolder}${fileName}`;
+            await fs.writeFile(filePath, file.buffer);
+        }
+
+        const postBody = {
+            categoryId: data.categoryId,
+            slug: slug(data.title),
+            title: data.title,
+            content: data.content,
+            image: file ? `${uploadFolder}${fileName}` : ''
+        }
+
+        const category = await Category.findByPk(data.categoryId);
+        if (!category) {
+            return {
+                status: 'error',
+                code: 404,
+                message: 'Kategori tidak ditemukan'
+            }
+        }
+
+        const createdPost = await Post.create(postBody);
+
+        return {
+            code: 201,
+            message: 'Created',
+            data: createdPost
+        };
+    } catch (err) {
+        throw new Error(err);
+    }
+}
+
+const updatePost = async (data, file, id) => {
+    try {
+        const uploadFolder = 'uploads/';
+        let fileName = '';
+
+        if (file) {
+            const fileType = file.mimetype.split('/')[1];
+            fileName = `${Date.now()}.${fileType}`;
+            const filePath = `${uploadFolder}${fileName}`;
+            await fs.writeFile(filePath, file.buffer);
+        }
+
+        const category = await Category.findByPk(data.categoryId);
+        if (!category) {
+            return {
+                status: 'error',
+                code: 404,
+                message: 'Kategori tidak ditemukan'
+            }
+        }
+
         const post = await Post.findByPk(id);
-        return {
-            message: 'success',
-            data: post
-        };
-    } catch (e) {
-        throw Error('Internal server error!');
-    }
-}
 
-const createPost = async (data) => {
-    try {
-        const body = {
-            category_id: data.category_id,
+        if (!post) {
+            return {
+                status: 'error',
+                code: 404,
+                message: 'Data tidak ditemukan'
+            }
+        }
+
+        if (file) {
+            await fs.unlink(`${post.image}`);
+        }
+
+        const postBody = {
+            categoryId: data.categoryId,
             slug: slug(data.title),
             title: data.title,
             content: data.content,
-            image: 'image.png'
+            image: file ? `${uploadFolder}${fileName}` : post.image
         }
-        const post = await Post.create(body);
-        return {
-            message: 'success',
-            data: post
-        };
-    } catch (e) {
-        throw Error('Internal server error!');
-    }
-}
 
-const updatePost = async (data, id) => {
-    try {
-        const body = {
-            category_id: data.category_id,
-            slug: slug(data.title),
-            title: data.title,
-            content: data.content,
-            image: 'image.png'
-        }
-        console.log(body)
-        const post   = await Post.findByPk(id);
-        const update = await post.update(body);
+        const updatedPost = await post.update(postBody);
+
         return {
-            message: 'success',
-            data: update
+            message: 'Updated',
+            data: updatedPost
         };
-    } catch (e) {
-        throw Error('Internal server error!');
+    } catch (err) {
+        throw new Error(err);
     }
 }
 
 const deletePost = async (id) => {
     try {
         const post = await Post.findByPk(id);
+        if (!post) {
+            return {
+                status: 'error',
+                code: 404,
+                message: 'Data tidak ditemukan'
+            }
+        }
+
         await post.destroy();
+        
         return {
-            message: 'deleted'
+            message: 'Deleted'
         };
-    } catch (e) {
-        throw Error('Internal server error!');
+    } catch (err) {
+        throw new Error(err);
     }
 }
 

@@ -1,5 +1,9 @@
 const sequelize = require('../config/db.config');
 
+const Category = require('./category.model');
+const Post = require('./post.model');
+const User = require('./user.model');
+
 sequelize.sync({ force: false })
 .then(() => {
   console.log('Database synced');
@@ -8,9 +12,6 @@ sequelize.sync({ force: false })
   console.error('Error syncing database:', err);
 });
 
-const Category = require('./category.model');
-const Post = require('./post.model');
-
 module.exports = {
-  Category, Post
+  Category, Post, User
 }

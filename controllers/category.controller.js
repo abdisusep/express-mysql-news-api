@@ -1,31 +1,32 @@
 const service = require('../services/category.service');
+const { sendSuccessResponse, sendErrorResponse } = require('../utils/response');
 
 const getCategories = async (req, res) => {
     try {
-        const categories = await service.getCategories();
-        res.status(200).json(categories);
-    } catch (e) {
-        res.status(400).json({ error: e.message });
+        const result = await service.getCategories();
+        sendSuccessResponse(res, result);
+    } catch (err) {
+        sendErrorResponse(res, err, 400);
     }
 }
 
 const getCategory = async (req, res) => {
     try {
         const id = req.params.id;
-        const category = await service.getCategory(id);
-        res.status(200).json(category);
-    } catch (e) {
-        res.status(500).json({ error: e.message });
+        const result = await service.getCategory(id);
+        sendSuccessResponse(res, result);
+    } catch (err) {
+        sendErrorResponse(res, err);
     }
 }
 
 const createCategory = async (req, res) => {
     try {
         const data = req.body;
-        const category = await service.createCategory(data);
-        res.status(201).json(category);
-    } catch (e) {
-        res.status(400).json({ error: e.message });
+        const result = await service.createCategory(data);
+        sendSuccessResponse(res, result);
+    } catch (err) {
+        sendErrorResponse(res, err, 400);
     }
 }
 
@@ -33,20 +34,20 @@ const updateCategory = async (req, res) => {
     try {
         const data = req.body;
         const id = req.params.id;
-        const category = await service.updateCategory(data, id);
-        res.status(200).json(category);
-    } catch (e) {
-        res.status(400).json({ error: e.message });
+        const result = await service.updateCategory(data, id);
+        sendSuccessResponse(res, result);
+    } catch (err) {
+        sendErrorResponse(res, err, 400);
     }
 }
 
 const deleteCategory = async (req, res) => {
     try {
         const id = req.params.id;
-        const category = await service.deleteCategory(id);
-        res.status(200).json(category);
-    } catch (e) {
-        res.status(400).json({ error: e.message });
+        const result = await service.deleteCategory(id);
+        sendSuccessResponse(res, result);
+    } catch (err) {
+        sendErrorResponse(res, err, 400);
     }
 }
 

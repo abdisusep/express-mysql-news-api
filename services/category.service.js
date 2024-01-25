@@ -3,62 +3,109 @@ const Category = model.Category;
 
 const getCategories = async () => {
     try {
-        const categories = await Category.findAll();
+        const categories = await Category.findAll({
+            limit: 10,
+            offset: 0,
+        });
+        if (categories.length === 0) {
+            return {
+                status: 'error',
+                code: 404,
+                message: 'Data tidak ditemukan'
+            }
+        }
+
         return {
-            message: 'success',
+            message: 'Data',
             data: categories
-        };
-    } catch (e) {
-        throw Error('Internal server error!');
+        }
+    } catch (err) {
+        throw new Error(err);
     }
 }
 
 const getCategory = async (id) => {
     try {
         const category = await Category.findByPk(id);
+        if (!category) {
+            return {
+                status: 'error',
+                code: 404,
+                message: 'Data tidak ditemukan'
+            }
+        }
+
         return {
-            message: 'success',
+            message: 'Detail',
             data: category
-        };
-    } catch (e) {
-        throw Error('Internal server error!');
+        }
+    } catch (err) {
+        throw new Error(err);
     }
 }
 
 const createCategory = async (data) => {
     try {
-        const category = await Category.create(data);
+        const existingCategory = await Category.findOne({ name: data.name });
+
+        if (existingCategory) {
+            return {
+                status: 'error',
+                code: 409,
+                message: 'Category with similar data already exists',
+            };
+        }
+
+        const createdCategory = await Category.create(data);
         return {
-            message: 'success',
-            data: category
-        };
-    } catch (e) {
-        throw Error('Internal server error!');
+            code: 201,
+            message: 'Created',
+            data: createdCategory
+        }
+    } catch (err) {
+        throw new Error(err);
     }
 }
 
 const updateCategory = async (data, id) => {
     try {
         const category = await Category.findByPk(id);
-        const update   = await category.update(data);
+        if (!category) {
+            return {
+                status: 'error',
+                code: 404,
+                message: 'Data tidak ditemukan'
+            }
+        }
+
+        const updatedCategory = await category.update(data);
         return {
-            message: 'success',
-            data: update
-        };
-    } catch (e) {
-        throw Error('Internal server error!');
+            message: 'Updated',
+            data: updatedCategory
+        }
+    } catch (err) {
+        throw new Error(err);
     }
 }
 
 const deleteCategory = async (id) => {
     try {
         const category = await Category.findByPk(id);
+        if (!category) {
+            return {
+                status: 'error',
+                code: 404,
+                message: 'Data tidak ditemukan'
+            }
+        }
+
         await category.destroy();
+        
         return {
-            message: 'deleted'
-        };
-    } catch (e) {
-        throw Error('Internal server error!');
+            message: 'Deleted'
+        }
+    } catch (err) {
+        throw new Error(err);
     }
 }
 
